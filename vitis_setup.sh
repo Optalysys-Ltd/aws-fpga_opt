@@ -174,18 +174,18 @@ info_msg "Using Vitis $RELEASE_VER"
 if [[ $RELEASE_VER =~ .*2019\.2.*  ||  $RELEASE_VER =~ .*2020\.* ||  $RELEASE_VER =~ .*2021\.* ]]; then
     info_msg "Updating Xilinx Vitis Examples $RELEASE_VER"
     git submodule update --init -- Vitis/examples/xilinx_$RELEASE_VER
-    export VIVADO_TOOL_VER=$RELEASE_VER
-    if [ -e $VITIS_DIR/examples/xilinx ]; then
-        if [ ! -L $VITIS_DIR/examples/xilinx ]; then
-          err_msg "ERROR:  Vitis/examples/xilinx is not a symbolic link.  Backup any data and remove Vitis/examples/xilinx directory.  The setup needs to create a symbolic link from Vitis/examples/xilinx to Vitis/examples/xilinx_$RELEASE_VER"
-          return 1
-        fi
-    fi
-    ln -sf $VITIS_DIR/examples/xilinx_$RELEASE_VER $VITIS_DIR/examples/xilinx
 else
-   echo " $RELEASE_VER is not supported (2019.2, 2020.1, 2020.2, 2021.1 or 2021.2 are supported).\n"
-   return 2
+    info_msg "WARNING: Vitis $RELEASE_VER is not supported; use at your own risks"
 fi
+
+export VIVADO_TOOL_VER=$RELEASE_VER
+if [ -e $VITIS_DIR/examples/xilinx ]; then
+    if [ ! -L $VITIS_DIR/examples/xilinx ]; then
+      err_msg "ERROR:  Vitis/examples/xilinx is not a symbolic link.  Backup any data and remove Vitis/examples/xilinx directory.  The setup needs to create a symbolic link from Vitis/examples/xilinx to Vitis/examples/xilinx_$RELEASE_VER"
+      return 1
+    fi
+fi
+ln -sf $VITIS_DIR/examples/xilinx_$RELEASE_VER $VITIS_DIR/examples/xilinx
 
 # Check if internet connection is available
 if ! check_internet; then
